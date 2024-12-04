@@ -74,7 +74,9 @@ function displaySessionHistory() {
     return;
   }
 
-  sessions.reverse().forEach((session, index) => {
+  sessions.sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time)); // Sort by date and time
+
+  sessions.forEach((session, index) => {
     const sessionElement = document.createElement('div');
     sessionElement.classList.add('session-item');
     const trashIcon = document.createElement('img');
@@ -91,10 +93,9 @@ function displaySessionHistory() {
     const timeParts = session.time.split(':');
     const duration = formatShortTime(session.duration);
 
-
     sessionElement.innerHTML = `#${index + 1} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${duration} ${session.breastCount}`;
     sessionElement.appendChild(trashIcon);
-    sessionHistoryDisplay.appendChild(sessionElement);
+    sessionHistoryDisplay.prepend(sessionElement); 
   });
 
   calculateAndDisplayStats();
