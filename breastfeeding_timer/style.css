@@ -14,11 +14,32 @@ body {
   background-color: #333;
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  padding: 30px;
+  padding: 20px;
   text-align: center;
-  width: 450px;
+  width: 90%; /* Adjust width for smaller screens */
+  max-width: 450px;
   position: relative;
 }
+
+@media (max-width: 400px) {
+  .container {
+    width: 95%;
+  }
+  h1 {
+    font-size: 1.8em;
+  }
+  #timer {
+    font-size: 2em;
+  }
+  #breastCount {
+    font-size: 1.2em;
+  }
+  .session-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 
 .sticky-top {
   position: sticky;
