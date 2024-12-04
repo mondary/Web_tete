@@ -23,6 +23,18 @@ function formatTime(time) {
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
+function formatShortTime(time) {
+    const seconds = Math.floor((time / 1000) % 60);
+    const minutes = Math.floor((time / (1000 * 60)) % 60);
+    const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+
+    return `${formattedHours}h${formattedMinutes}m${formattedSeconds}s`;
+}
+
 function updateTimer() {
   elapsedTime = Date.now() - startTime;
   const formattedTime = formatTime(elapsedTime);
@@ -48,7 +60,7 @@ function logSession() {
   createFeedingChart();
   console.log('Session logged:', sessionData);
   displayRecentSessionList();
-  breastCount = 0; // Reset breast count after logging
+  breastCount = 0;
   breastCountDisplay.textContent = breastCount;
 }
 
@@ -77,7 +89,12 @@ function displaySessionHistory() {
       displaySessionHistory();
       createFeedingChart();
     });
-    sessionElement.innerHTML = `Date: ${session.date}, Time: ${session.time}, Duration: ${formatTime(session.duration)}, Breast Count: ${session.breastCount}`;
+
+    const dateParts = session.date.split('/');
+    const timeParts = session.time.split(':');
+    const durationParts = formatShortTime(session.duration).split(':');
+
+    sessionElement.innerHTML = `#${index + 1} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${durationParts[0]}m${durationParts[1]}s ${session.breastCount}`; //Removed extra space
     sessionElement.appendChild(trashIcon);
     sessionHistoryDisplay.appendChild(sessionElement);
   });
