@@ -9,7 +9,10 @@ const startStopButton = document.getElementById('startStopButton');
 const timerDisplay = document.getElementById('timer');
 const sessionHistoryDisplay = document.getElementById('sessionHistory');
 const feedingChartCanvas = document.getElementById('feedingChart');
-const topStatsDisplay = document.getElementById('top-stats');
+const feedingChartLineCanvas = document.getElementById('feedingChartLine');
+const totalTimeDisplay = document.getElementById('total-time');
+const avgTimeDisplay = document.getElementById('avg-time');
+const numSessionsDisplay = document.getElementById('num-sessions');
 
 function formatTime(time) {
   const seconds = Math.floor((time / 1000) % 60);
@@ -55,6 +58,7 @@ function logSession() {
 
   displaySessionHistory();
   createFeedingChart();
+  createFeedingDurationChart();
   console.log('Session logged:', sessionData);
   displayRecentSessionList();
   breastCount = 0;
@@ -86,6 +90,7 @@ function displaySessionHistory() {
       updateSessionStorage();
       displaySessionHistory();
       createFeedingChart();
+      createFeedingDurationChart();
     });
 
     const dateParts = session.date.split('/');
@@ -107,7 +112,9 @@ function calculateAndDisplayStats() {
   const totalDuration = sessions.reduce((sum, session) => sum + session.duration, 0);
   const averageDuration = totalDuration / sessions.length;
 
-  topStatsDisplay.innerHTML = `Temps total: ${formatTime(totalDuration)}<br>Temps moyen: ${formatTime(averageDuration)}<br>Sessions: ${sessions.length}`;
+  totalTimeDisplay.textContent = formatTime(totalDuration);
+  avgTimeDisplay.textContent = formatTime(averageDuration);
+  numSessionsDisplay.textContent = sessions.length;
 }
 
 
@@ -158,6 +165,75 @@ function createFeedingChart() {
   });
 }
 
+function createFeedingDurationChart() {
+  const durations = sessions.map(session => session.duration);
+  const durationRanges = calculateDurationRanges(durations);
+
+  const ctx = feedingChartLineCanvas.getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: durationRanges.labels,
+      datasets: [{
+        label: 'Feeding Durations',
+        data: durationRanges.counts,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Duration Range (minutes)'
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Number of Feedings'
+          }
+        }
+      }
+    }
+  });
+}
+
+
+function calculateDurationRanges(durations) {
+  const minDuration = Math.min(...durations);
+  const maxDuration = Math.max(...durations);
+  const rangeSize = Math.ceil((maxDuration - minDuration) / 5); 
+
+  const ranges = [];
+  let currentMin = minDuration;
+  for (let i = 0; i < 5; i++) {
+    const currentMax = currentMin + rangeSize;
+    ranges.push({ min: currentMin, max: currentMax });
+    currentMin = currentMax;
+  }
+
+  const counts = ranges.map(range => {
+    return durations.filter(duration => duration >= range.min && duration < range.max).length;
+  });
+
+  const labels = ranges.map(range => {
+    const minMinutes = Math.floor(range.min / 1000 / 60);
+    const maxMinutes = Math.floor(range.max / 1000 / 60);
+    if (minMinutes === maxMinutes) {
+      return `${minMinutes} min`;
+    } else {
+      return `${minMinutes}-${maxMinutes} min`;
+    }
+  });
+
+  return { labels, counts };
+}
+
+
 function getHourlyFeedingData(sessions) {
   const hourlyCounts = {};
   sessions.forEach(session => {
@@ -185,6 +261,7 @@ function displayRecentSessionList() {
 window.addEventListener('load', () => {
   displaySessionHistory();
   createFeedingChart();
+  createFeedingDurationChart();
 });
 
 startStopButton.addEventListener('click', () => {

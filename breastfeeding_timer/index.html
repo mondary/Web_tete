@@ -7,13 +7,27 @@
 </head>
 <body>
   <div class="container">
-    <div id="top-stats"></div>
+    <div id="top-stats">
+        <div class="stat-item">
+            <div class="stat-label">Temps total:</div>
+            <div class="stat-value" id="total-time"></div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Temps moyen:</div>
+            <div class="stat-value" id="avg-time"></div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Sessions:</div>
+            <div class="stat-value" id="num-sessions"></div>
+        </div>
+    </div>
     <header>
       <h1>Breastfeeding Timer</h1>
     </header>
     <button id="startStopButton">Start</button>
     <div id="timer">00:00:00</div>
     <canvas id="feedingChart"></canvas>
+    <canvas id="feedingChartLine"></canvas>
     <div id="sessionHistory"></div>
   </div>
   <script src="script.js"></script>
