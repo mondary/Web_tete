@@ -3,11 +3,13 @@ let elapsedTime = 0;
 let timerInterval;
 let isRunning = false;
 let sessions = [];
+let breastCount = 0;
 
 const startStopButton = document.getElementById('startStopButton');
 const timerDisplay = document.getElementById('timer');
 const sessionHistoryDisplay = document.getElementById('sessionHistory');
 const feedingChartCanvas = document.getElementById('feedingChart');
+const breastCountDisplay = document.getElementById('breastCountDisplay');
 
 function formatTime(time) {
   const seconds = Math.floor((time / 1000) % 60);
@@ -23,7 +25,13 @@ function formatTime(time) {
 
 function updateTimer() {
   elapsedTime = Date.now() - startTime;
-  timerDisplay.textContent = formatTime(elapsedTime);
+  const formattedTime = formatTime(elapsedTime);
+  const timeParts = formattedTime.split(':');
+  timerDisplay.innerHTML = `
+    <span>${timeParts[0]}</span>
+    <span>${timeParts[1]}</span>
+    <span>${timeParts[2]}</span>
+  `;
 }
 
 function logSession() {
@@ -32,7 +40,7 @@ function logSession() {
   const timeString = now.toLocaleTimeString();
   const durationString = formatTime(elapsedTime);
 
-  const sessionData = { date: dateString, time: timeString, duration: elapsedTime };
+  const sessionData = { date: dateString, time: timeString, duration: elapsedTime, breastCount: breastCount };
   sessions.push(sessionData);
   updateSessionStorage();
 
@@ -40,10 +48,12 @@ function logSession() {
   createFeedingChart();
   console.log('Session logged:', sessionData);
   displayRecentSessionList();
+  breastCount = 0; // Reset breast count after logging
+  breastCountDisplay.textContent = breastCount;
 }
 
 function updateSessionStorage() {
-    localStorage.setItem('sessions', JSON.stringify(sessions));
+  localStorage.setItem('sessions', JSON.stringify(sessions));
 }
 
 function displaySessionHistory() {
@@ -58,7 +68,17 @@ function displaySessionHistory() {
   sessions.reverse().forEach((session, index) => {
     const sessionElement = document.createElement('div');
     sessionElement.classList.add('session-item');
-    sessionElement.innerHTML = `Date: ${session.date}, Time: ${session.time}, Duration: ${formatTime(session.duration)}`;
+    const trashIcon = document.createElement('img');
+    trashIcon.src = 'trash.png';
+    trashIcon.alt = 'Delete Session';
+    trashIcon.addEventListener('click', () => {
+      sessions.splice(index, 1);
+      updateSessionStorage();
+      displaySessionHistory();
+      createFeedingChart();
+    });
+    sessionElement.innerHTML = `Date: ${session.date}, Time: ${session.time}, Duration: ${formatTime(session.duration)}, Breast Count: ${session.breastCount}`;
+    sessionElement.appendChild(trashIcon);
     sessionHistoryDisplay.appendChild(sessionElement);
   });
 
@@ -67,19 +87,23 @@ function displaySessionHistory() {
 
 
 function calculateAndDisplayStats() {
-    if (sessions.length === 0) return;
+  if (sessions.length === 0) return;
 
-    const totalDuration = sessions.reduce((sum, session) => sum + session.duration, 0);
-    const averageDuration = totalDuration / sessions.length;
+  const totalDuration = sessions.reduce((sum, session) => sum + session.duration, 0);
+  const averageDuration = totalDuration / sessions.length;
+  const totalBreastCount = sessions.reduce((sum, session) => sum + session.breastCount, 0);
+  const averageBreastCount = totalBreastCount / sessions.length;
 
-    const statsDisplay = document.createElement('div');
-    statsDisplay.innerHTML = `
-        <h3>Statistics</h3>
-        <p>Total Feeding Time: ${formatTime(totalDuration)}</p>
-        <p>Average Feeding Time: ${formatTime(averageDuration)}</p>
-        <p>Number of Feedings: ${sessions.length}</p>
-    `;
-    sessionHistoryDisplay.appendChild(statsDisplay);
+  const statsDisplay = document.createElement('div');
+  statsDisplay.innerHTML = `
+      <h3>Statistics</h3>
+      <p>Total Feeding Time: ${formatTime(totalDuration)}</p>
+      <p>Average Feeding Time: ${formatTime(averageDuration)}</p>
+      <p>Number of Feedings: ${sessions.length}</p>
+      <p>Total Breast Count: ${totalBreastCount}</p>
+      <p>Average Breast Count: ${averageBreastCount.toFixed(1)}</p>
+  `;
+  sessionHistoryDisplay.appendChild(statsDisplay);
 }
 
 
@@ -121,31 +145,50 @@ function createFeedingChart() {
 }
 
 function getHourlyFeedingData(sessions) {
-    const hourlyCounts = {};
-    sessions.forEach(session => {
-        const timeParts = session.time.split(':');
-        const hour = parseInt(timeParts[0]);
-        hourlyCounts[hour] = (hourlyCounts[hour] || 0) + 1;
-    });
+  const hourlyCounts = {};
+  sessions.forEach(session => {
+    const timeParts = session.time.split(':');
+    const hour = parseInt(timeParts[0]);
+    hourlyCounts[hour] = (hourlyCounts[hour] || 0) + 1;
+  });
 
-    const labels = [];
-    const data = [];
-    for (let i = 0; i < 24; i++) {
-        labels.push(i);
-        data.push(hourlyCounts[i] || 0);
-    }
-    return { labels, data };
+  const labels = [];
+  const data = [];
+  for (let i = 0; i < 24; i++) {
+    labels.push(i);
+    data.push(hourlyCounts[i] || 0);
+  }
+  return { labels, data };
 }
 
 function displayRecentSessionList() {
-    if (sessions.length > 0) {
-        const lastSession = sessions[sessions.length - 1];
-        alert(`Date: ${lastSession.date}, Time: ${lastSession.time}, Duration: ${formatTime(lastSession.duration)}`);
-    }
+  if (sessions.length > 0) {
+    const lastSession = sessions[sessions.length - 1];
+    alert(`Date: ${lastSession.date}, Time: ${lastSession.time}, Duration: ${formatTime(lastSession.duration)}, Breast Count: ${lastSession.breastCount}`);
+  }
 }
 
-window.addEventListener('load', displaySessionHistory);
-window.addEventListener('load', createFeedingChart);
+window.addEventListener('load', () => {
+  displaySessionHistory();
+  createFeedingChart();
+  const incrementBreastCountButton = document.createElement('button');
+  incrementBreastCountButton.textContent = '+ Breast';
+  incrementBreastCountButton.style.cssText = `
+    padding: 8px 15px;
+    margin-left: 10px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  `;
+  incrementBreastCountButton.addEventListener('click', () => {
+    breastCount++;
+    breastCountDisplay.textContent = breastCount;
+  });
+  document.querySelector('.container').appendChild(incrementBreastCountButton);
+});
 
 startStopButton.addEventListener('click', () => {
   if (!isRunning) {

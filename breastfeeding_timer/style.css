@@ -1,73 +1,113 @@
 body {
-  font-family: 'Arial', sans-serif;
-  text-align: center;
-  background-color: #2F3445; /* Dark background */
+  font-family: 'Roboto', sans-serif; /* Using Roboto font */
+  background: linear-gradient(to bottom, #4CAF50, #81C784); /* Green gradient background */
   margin: 0;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  color: white; /* White text */
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
 .container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  padding: 20px;
-  box-sizing: border-box;
-  background-color: #333; /* Darker gray container */
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent white background */
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  padding: 30px;
+  text-align: center;
+  width: 350px; /* Adjusted width */
 }
 
 h1 {
+  font-size: 2em;
   margin-bottom: 20px;
   color: white;
+  text-shadow: 2px 2px 4px #000000; /* Add text shadow */
 }
 
 #startStopButton {
   padding: 15px 30px;
-  font-size: 18px;
-  background-color: #4CAF50;
+  font-size: 1.2em;
+  background-color: #008CBA; /* Blue button */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   margin-bottom: 20px;
   transition: background-color 0.3s ease;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add button shadow */
 }
 
 #startStopButton:hover {
-  background-color: #45a049;
+  background-color: #00698F; /* Darker blue on hover */
 }
 
 #timer {
-  font-size: 48px;
+  font-size: 3em;
   color: white;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-shadow: 2px 2px 4px #000000; /* Add text shadow */
+}
+
+#timer span {
+  margin: 0 10px;
+}
+
+#breastCount {
+  font-size: 1.5em;
+  color: white;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px #000000; /* Add text shadow */
 }
 
 #feedingChart {
-  width: 80%;
-  max-width: 600px;
+  width: 100%;
   margin-bottom: 20px;
 }
 
 .session-item {
   margin-bottom: 10px;
-  border-bottom: 1px solid #555; /* Darker gray border */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
   padding-bottom: 10px;
-  color: white;
+  display: flex;
+  justify-content: space-between; /* Distribute items */
+  align-items: center; /* Vertically align items */
+}
+
+.session-item img {
+  cursor: pointer; /* Make the image clickable */
+  width: 20px; /* Adjust image size as needed */
+  height: auto;
 }
 
 h3 {
+  font-size: 1.5em;
   margin-top: 20px;
   color: white;
+  text-shadow: 2px 2px 4px #000000; /* Add text shadow */
 }
 
 p {
   margin-bottom: 5px;
   color: white;
+  text-shadow: 2px 2px 4px #000000; /* Add text shadow */
+}
+
+/* Style for the increment button */
+#breastCount button {
+  padding: 8px 15px;
+  margin-left: 10px;
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#breastCount button:hover {
+  background-color: #00698F;
 }
