@@ -116,8 +116,6 @@ function calculateAndDisplayStats() {
       <p>Total Feeding Time: ${formatTime(totalDuration)}</p>
       <p>Average Feeding Time: ${formatTime(averageDuration)}</p>
       <p>Number of Feedings: ${sessions.length}</p>
-      <p>Total Breast Count: ${totalBreastCount}</p>
-      <p>Average Breast Count: ${averageBreastCount.toFixed(1)}</p>
   `;
   sessionHistoryDisplay.appendChild(statsDisplay);
 }
@@ -190,23 +188,6 @@ function displayRecentSessionList() {
 window.addEventListener('load', () => {
   displaySessionHistory();
   createFeedingChart();
-  const incrementBreastCountButton = document.createElement('button');
-  incrementBreastCountButton.textContent = '+ Breast';
-  incrementBreastCountButton.style.cssText = `
-    padding: 8px 15px;
-    margin-left: 10px;
-    background-color: #008CBA;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  `;
-  incrementBreastCountButton.addEventListener('click', () => {
-    breastCount++;
-    breastCountDisplay.textContent = breastCount;
-  });
-  document.querySelector('.container').appendChild(incrementBreastCountButton);
 });
 
 startStopButton.addEventListener('click', () => {
