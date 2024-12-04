@@ -9,7 +9,7 @@ const startStopButton = document.getElementById('startStopButton');
 const timerDisplay = document.getElementById('timer');
 const sessionHistoryDisplay = document.getElementById('sessionHistory');
 const feedingChartCanvas = document.getElementById('feedingChart');
-const breastCountDisplay = document.getElementById('breastCountDisplay');
+const statsDisplay = document.getElementById('stats');
 
 function formatTime(time) {
   const seconds = Math.floor((time / 1000) % 60);
@@ -58,7 +58,6 @@ function logSession() {
   console.log('Session logged:', sessionData);
   displayRecentSessionList();
   breastCount = 0;
-  breastCountDisplay.textContent = breastCount;
 }
 
 function updateSessionStorage() {
@@ -107,17 +106,13 @@ function calculateAndDisplayStats() {
 
   const totalDuration = sessions.reduce((sum, session) => sum + session.duration, 0);
   const averageDuration = totalDuration / sessions.length;
-  const totalBreastCount = sessions.reduce((sum, session) => sum + session.breastCount, 0);
-  const averageBreastCount = totalBreastCount / sessions.length;
 
-  const statsDisplay = document.createElement('div');
   statsDisplay.innerHTML = `
       <h3>Statistics</h3>
-      <p>Total Feeding Time: ${formatTime(totalDuration)}</p>
-      <p>Average Feeding Time: ${formatTime(averageDuration)}</p>
-      <p>Number of Feedings: ${sessions.length}</p>
+      <p>Total Time: ${formatTime(totalDuration)}</p>
+      <p>Avg Time: ${formatTime(averageDuration)}</p>
+      <p>Sessions: ${sessions.length}</p>
   `;
-  sessionHistoryDisplay.appendChild(statsDisplay);
 }
 
 
@@ -147,13 +142,20 @@ function createFeedingChart() {
       scales: {
         x: {
           title: {
-            display: false
+            display: true,
+            text: 'Hour'
+          },
+          ticks: {
+            stepSize: 1,
+            min: 1,
+            max: 23
           }
         },
         y: {
           beginAtZero: true,
           title: {
-            display: false //removed title
+            display: true,
+            text: 'Number of Feedings'
           }
         }
       }
@@ -171,7 +173,7 @@ function getHourlyFeedingData(sessions) {
 
   const labels = [];
   const data = [];
-  for (let i = 0; i < 24; i++) {
+  for (let i = 1; i <= 23; i++) {
     labels.push(i);
     data.push(hourlyCounts[i] || 0);
   }
