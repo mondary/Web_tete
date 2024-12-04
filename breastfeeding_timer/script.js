@@ -55,6 +55,7 @@ function logSession() {
   const sessionData = { date: dateString, time: timeString, duration: elapsedTime, breastCount: breastCount };
   sessions.push(sessionData);
   updateSessionStorage();
+  saveDataToFile();
 
   displaySessionHistory();
   createFeedingChart();
@@ -88,6 +89,7 @@ function displaySessionHistory() {
     trashIcon.addEventListener('click', () => {
       sessions.splice(index, 1);
       updateSessionStorage();
+      saveDataToFile();
       displaySessionHistory();
       createFeedingChart();
       createFeedingDurationChart();
@@ -97,7 +99,7 @@ function displaySessionHistory() {
     const timeParts = session.time.split(':');
     const duration = formatShortTime(session.duration);
 
-    sessionElement.innerHTML = `#${sessions.length - index} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} à ${timeParts[0]}:${timeParts[1]} - dur: ${duration}`;
+    sessionElement.innerHTML = `#${sessions.length - index} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} a ${timeParts[0]}:${timeParts[1]} - dur: ${duration}`;
     sessionElement.appendChild(trashIcon);
     sessionHistoryDisplay.prepend(sessionElement);
   });
@@ -256,6 +258,28 @@ function displayRecentSessionList() {
     const lastSession = sessions[sessions.length - 1];
     alert(`Date: ${lastSession.date}, Time: ${lastSession.time}, Duration: ${formatTime(lastSession.duration)}, Breast Count: ${lastSession.breastCount}`);
   }
+}
+
+function saveDataToFile() {
+  fetch('data.json', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(sessions)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Data saved successfully:', data);
+  })
+  .catch(error => {
+    console.error('There has been a problem with your fetch operation:', error);
+  });
 }
 
 window.addEventListener('load', () => {
