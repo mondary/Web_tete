@@ -24,15 +24,12 @@ function formatTime(time) {
 }
 
 function formatShortTime(time) {
-    const seconds = Math.floor((time / 1000) % 60);
-    const minutes = Math.floor((time / (1000 * 60)) % 60);
-    const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+  const seconds = Math.floor((time / 1000) % 60);
+  const minutes = Math.floor((time / (1000 * 60)) % 60);
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
-    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-    const formattedHours = hours < 10 ? `0${hours}` : hours;
-
-    return `${formattedHours}h${formattedMinutes}m${formattedSeconds}s`;
+  return `${formattedMinutes}m${formattedSeconds}s`;
 }
 
 function updateTimer() {
@@ -92,9 +89,10 @@ function displaySessionHistory() {
 
     const dateParts = session.date.split('/');
     const timeParts = session.time.split(':');
-    const durationParts = formatShortTime(session.duration).split(':');
+    const duration = formatShortTime(session.duration);
 
-    sessionElement.innerHTML = `#${index + 1} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${durationParts[0]}m${durationParts[1]}s ${session.breastCount}`; //Removed extra space
+
+    sessionElement.innerHTML = `#${index + 1} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${duration} ${session.breastCount}`;
     sessionElement.appendChild(trashIcon);
     sessionHistoryDisplay.appendChild(sessionElement);
   });
