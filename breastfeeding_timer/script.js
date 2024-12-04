@@ -9,7 +9,7 @@ const startStopButton = document.getElementById('startStopButton');
 const timerDisplay = document.getElementById('timer');
 const sessionHistoryDisplay = document.getElementById('sessionHistory');
 const feedingChartCanvas = document.getElementById('feedingChart');
-const statsDisplay = document.getElementById('stats');
+const topStatsDisplay = document.getElementById('top-stats');
 
 function formatTime(time) {
   const seconds = Math.floor((time / 1000) % 60);
@@ -107,12 +107,7 @@ function calculateAndDisplayStats() {
   const totalDuration = sessions.reduce((sum, session) => sum + session.duration, 0);
   const averageDuration = totalDuration / sessions.length;
 
-  statsDisplay.innerHTML = `
-      <h3>Statistics</h3>
-      <p>Total Time: ${formatTime(totalDuration)}</p>
-      <p>Avg Time: ${formatTime(averageDuration)}</p>
-      <p>Sessions: ${sessions.length}</p>
-  `;
+  topStatsDisplay.innerHTML = `Temps total: ${formatTime(totalDuration)}<br>Temps moyen: ${formatTime(averageDuration)}<br>Sessions: ${sessions.length}`;
 }
 
 
