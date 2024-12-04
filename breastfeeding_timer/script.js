@@ -74,7 +74,7 @@ function displaySessionHistory() {
     return;
   }
 
-  sessions.sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time)); // Sort by date and time
+  sessions.sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
 
   sessions.forEach((session, index) => {
     const sessionElement = document.createElement('div');
@@ -93,9 +93,9 @@ function displaySessionHistory() {
     const timeParts = session.time.split(':');
     const duration = formatShortTime(session.duration);
 
-    sessionElement.innerHTML = `#${index + 1} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${duration} ${session.breastCount}`;
+    sessionElement.innerHTML = `#${sessions.length - index} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${duration}`; //Removed breastCount
     sessionElement.appendChild(trashIcon);
-    sessionHistoryDisplay.prepend(sessionElement); 
+    sessionHistoryDisplay.prepend(sessionElement);
   });
 
   calculateAndDisplayStats();
