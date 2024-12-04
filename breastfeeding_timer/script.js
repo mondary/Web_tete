@@ -73,7 +73,7 @@ function displaySessionHistory() {
   sessionHistoryDisplay.innerHTML = '';
 
   if (sessions.length === 0) {
-    sessionHistoryDisplay.textContent = 'No sessions yet.';
+    sessionHistoryDisplay.textContent = 'Aucune session pour le moment.';
     return;
   }
 
@@ -84,7 +84,7 @@ function displaySessionHistory() {
     sessionElement.classList.add('session-item');
     const trashIcon = document.createElement('img');
     trashIcon.src = 'trash.png';
-    trashIcon.alt = 'Delete Session';
+    trashIcon.alt = 'Supprimer la session';
     trashIcon.addEventListener('click', () => {
       sessions.splice(index, 1);
       updateSessionStorage();
@@ -97,7 +97,7 @@ function displaySessionHistory() {
     const timeParts = session.time.split(':');
     const duration = formatShortTime(session.duration);
 
-    sessionElement.innerHTML = `#${sessions.length - index} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${duration}`;
+    sessionElement.innerHTML = `#${sessions.length - index} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} à ${timeParts[0]}:${timeParts[1]} - dur: ${duration}`;
     sessionElement.appendChild(trashIcon);
     sessionHistoryDisplay.prepend(sessionElement);
   });
@@ -128,7 +128,7 @@ function createFeedingChart() {
     data: {
       labels: hourlyData.labels,
       datasets: [{
-        label: 'Feeding Sessions',
+        label: 'Séances d\'allaitement',
         data: hourlyData.data,
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
@@ -145,7 +145,7 @@ function createFeedingChart() {
         x: {
           title: {
             display: true,
-            text: 'Hour'
+            text: 'Heure'
           },
           ticks: {
             stepSize: 1,
@@ -157,7 +157,7 @@ function createFeedingChart() {
           beginAtZero: true,
           title: {
             display: true,
-            text: 'Number of Feedings'
+            text: 'Nombre de séances'
           }
         }
       }
@@ -175,7 +175,7 @@ function createFeedingDurationChart() {
     data: {
       labels: durationRanges.labels,
       datasets: [{
-        label: 'Feeding Durations',
+        label: 'Durée des séances',
         data: durationRanges.counts,
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -187,14 +187,14 @@ function createFeedingDurationChart() {
         x: {
           title: {
             display: true,
-            text: 'Duration Range (minutes)'
+            text: 'Tranche de durée (minutes)'
           }
         },
         y: {
           beginAtZero: true,
           title: {
             display: true,
-            text: 'Number of Feedings'
+            text: 'Nombre de séances'
           }
         }
       }
