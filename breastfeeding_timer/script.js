@@ -93,7 +93,7 @@ function displaySessionHistory() {
     const timeParts = session.time.split(':');
     const duration = formatShortTime(session.duration);
 
-    sessionElement.innerHTML = `#${sessions.length - index} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${duration}`; //Removed breastCount
+    sessionElement.innerHTML = `#${sessions.length - index} - ${dateParts[0]}/${dateParts[1]}/${dateParts[2]} @ ${timeParts[0]}:${timeParts[1]} - dur: ${duration}`;
     sessionElement.appendChild(trashIcon);
     sessionHistoryDisplay.prepend(sessionElement);
   });
@@ -141,18 +141,21 @@ function createFeedingChart() {
       }]
     },
     options: {
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
       scales: {
         x: {
           title: {
-            display: true,
-            text: 'Number of Feedings'
+            display: false
           }
         },
         y: {
           beginAtZero: true,
           title: {
-            display: true,
-            text: 'Hour of Day'
+            display: false //removed title
           }
         }
       }
